@@ -24,7 +24,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/google/flatbuffers.git
     GIT_TAG v23.5.26
 )
-set(FLATBUFFERS_CXX_FLAGS, "-Wno-error")
+# set(FLATBUFFERS_CXX_FLAGS, "-Wno-error")
 FetchContent_MakeAvailable(flatbuffers)
 
 set(CMAKE_BUILD_TYPE Debug)

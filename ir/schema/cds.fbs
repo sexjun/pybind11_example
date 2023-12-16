@@ -1,0 +1,18 @@
+namespace dshengChen;
+
+enum Color : byte { Red = 1, Green, Blue }
+
+struct Son {
+  x:float;
+  y:float;
+  z:float;
+}
+
+table Monster {
+  son:Son;
+  name:string;
+  age:uint8;
+  color:Color = Blue;
+}
+
+root_type Monster;
