@@ -84,7 +84,7 @@ GetMonster(flatbuffer)->UnPackTo(&monsterobj);
 // Update object directly like a C++ class instance.
 cout << monsterobj.name;  // This is now a std::string!
 monsterobj.name = "Bob";  // Change the name.
- 
+
 // Serialize into new flatbuffer.
 FlatBufferBuilder fbb;
 fbb.Finish(Monster::Pack(fbb, &monsterobj));
@@ -113,3 +113,28 @@ auto monster = GetMonster(data);
 
 
 # 三、在Python中使用
+
+# 四、 flatbuffer白皮书
+
+FlatBuffer 是一个二进制缓冲区，包含使用偏移量组织的嵌套对象（结构、表、向量等），以便可以像任何基于指针的数据结构一样就地遍历数据。然而，与大多数内存数据结构不同，它使用严格的对齐和字节顺序规则（总是很小）来确保这些缓冲区是跨平台的。此外，对于表对象，FlatBuffers 提供向前/向后兼容性和字段的一般可选性，以支持大多数形式的格式演变。
+
+您可以在模式中定义对象类型，然后可以将其编译为 C++ 或 Java，以实现低至零开销的读写。 （可选）JSON 数据可以动态解析到缓冲区中。
+- Table表格
+
+表是 FlatBuffers 的基石，因为格式演变对于大多数序列化应用程序至关重要。通常，处理格式更改可以在大多数序列化解决方案的解析过程中透明地完成。但是 FlatBuffer 在被访问之前不会被解析。
+
+表通过使用额外的间接访问字段（通过 vtable）来解决这个问题。每个表都带有一个 vtable（可以在具有相同布局的多个表之间共享），并且包含存储这种特定类型的 vtable 实例的字段的信息。 vtable 还可能指示该字段不存在（因为此 FlatBuffer 是用旧版本的软件编写的，只是因为该信息对于此实例来说不是必需的，或者被视为已弃用），在这种情况下，将返回默认值。
+
+表的内存开销（因为 vtable 很小且共享）和访问成本（额外的间接）开销较低，但提供了很大的灵活性。表甚至可能比等效结构消耗更少的内存，因为当字段等于默认值时不需要存储字段。
+
+- Schema
+
+虽然模式减少了一些通用性（您不能在没有模式的情况下读取任何数据），但它们有很多优点：
+
+有关格式的大多数信息都可以纳入生成的代码中，从而减少存储数据所需的内存以及访问数据的时间。
+
+数据定义的强类型意味着运行时更少的错误检查/处理（更少可能出错）。
+
+模式使我们能够访问缓冲区而无需解析。
+
+
