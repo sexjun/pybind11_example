@@ -39,3 +39,6 @@
 
 build/
 .vscode/
+.cache/
+python/dshengChen/
+core/include/cds_generated.h
