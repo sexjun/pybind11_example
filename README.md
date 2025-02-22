@@ -95,3 +95,19 @@ pybind11 的开发工作一直在进行中，Wenzel Jakob 和其他开发人员�
 
 
 pybind11 是一个非常强大的工具，可以用于各种任务。它可以用于将 C++ 代码与 Python 脚本集成，也可以用于创建 Python 的 C++ 扩展。**已经成为 C++ 和 Python 互操作领域的事实标准。**
+
+
+## 关于与cmake结合的部分
+
+无论是在cpp代码里设置的名字， 还是在cmake代码里设置的名字，都必须一致，否则python导包的时候就招不到包了。
+
+```shell
+PYBIND11_MODULE(cmake_example, m) {
+pybind11_add_module(cmake_example fun_wrapper.cpp)
+```
+
+在 pybind11 中，一个 .cpp 文件中只能定义一个 PYBIND11_MODULE 模块。每个 PYBIND11_MODULE 宏定义了一个独立的 Python 模块，因此你不能在同一个 .cpp 文件中使用多个 PYBIND11_MODULE 宏来定义多个模块。
+
+如果你需要定义多个 Python 模块，你应该将每个模块的实现放在不同的 .cpp 文件中，并在每个文件中使用 PYBIND11_MODULE 宏来定义相应的模块。
+
+例如，如果你需要定义两个模块 module1 和 module2，你可以创建两个 .cpp 文件：
